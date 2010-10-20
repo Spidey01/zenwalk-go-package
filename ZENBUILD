@@ -1,0 +1,65 @@
+#Maintainer: Terry M. Poulin <BigBoss1964@gmail.com>
+#
+# Please report any issues with this package via Github:
+#
+# 	http://github.com/Spidey01/zenwalk-go-package/issues
+#
+# If you must send an E-Mail, prefix the subject line with the package name, or
+# some other means of identifying it as NON-SPAM.
+
+pkgname=go
+pkgver=$(date +%Y%m%d)
+pkgrel=1
+zenver=66
+arch=i486
+sourcetemplate="http://dl.dropbox.com/u/7012687/zenwalk/packages/${pkgname}"
+docs=("AUTHORS" "CONTRIBUTORS" "LICENSE" "README")
+url="http://golang.org/"
+
+slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"$pkgname - The Go programming language"
+""
+"Go is a compiled, garbage-collected, concurrent programming language"
+"developed by Google Inc and released under a BSD-style license."
+)
+
+build() {
+	mkdir -p "$startdir/pkg/etc/profile.d/"
+
+	cat << EOF > "$startdir/pkg/etc/profile.d/go.sh"
+#!/bin/sh
+GOROOT=/usr/lib/go
+GOOS=linux
+GOARCH=386
+export GOROOT GOOS GOARCH
+PATH="${PATH}:/${GOROOT}/bin"
+EOF
+	cat << EOF > "$startdir/pkg/etc/profile.d/go.csh"
+#!/bin/csh
+setenv GOROOT /usr/lib/go
+setenv GOOS linux
+setenv GOARCH 386
+setenv PATH "$PATH:$GOROOT/bin"
+EOF
+
+	cd "$startdir/src/"
+	hg clone -r release https://go.googlecode.com/hg go || return 1
+
+	# this will become our $GOROOT later.
+	GOROOT_FINAL=/usr/lib/go
+	GOOS=linux
+	GOARCH=386
+	export GOROOT_FINAL GOOS GOARCH
+
+	cd go/src
+	./all.bash || return 1
+
+	# This is a big sucker
+	#
+	rm -rf ../.hg*
+	find . -name '*.8' -exec rm -f '{}' \;	# rm obj files
+	mkdir -p "$startdir/pkg/usr/lib/" && cd "$startdir/pkg/usr/lib/"
+	cp -rv "$startdir/src/go" ./
+}
