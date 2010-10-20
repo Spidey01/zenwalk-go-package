@@ -13,6 +13,7 @@ pkgrel=1
 zenver=66
 arch=i486
 sourcetemplate="http://dl.dropbox.com/u/7012687/zenwalk/packages/${pkgname}"
+dotnew=("etc/profile.d/go.sh" "etc/profile.d/go.csh")
 docs=("AUTHORS" "CONTRIBUTORS" "LICENSE" "README")
 url="http://golang.org/"
 
