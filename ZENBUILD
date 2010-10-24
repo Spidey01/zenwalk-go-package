@@ -29,7 +29,7 @@ slackdesc=\
 build() {
 	mkdir -p "$startdir/pkg/etc/profile.d/"
 
-	cat << EOF > "$startdir/pkg/etc/profile.d/go.sh"
+	cat << "EOF" > "$startdir/pkg/etc/profile.d/go.sh"
 #!/bin/sh
 GOROOT=/usr/lib/go
 GOOS=linux
@@ -37,7 +37,7 @@ GOARCH=386
 export GOROOT GOOS GOARCH
 PATH="${PATH}:/${GOROOT}/bin"
 EOF
-	cat << EOF > "$startdir/pkg/etc/profile.d/go.csh"
+	cat << "EOF" > "$startdir/pkg/etc/profile.d/go.csh"
 #!/bin/csh
 setenv GOROOT /usr/lib/go
 setenv GOOS linux
